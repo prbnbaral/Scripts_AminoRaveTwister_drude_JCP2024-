@@ -1,0 +1,66 @@
+* Calculate dipole moment of selected atoms
+*
+ 
+DIMENS CHSIZE 300000 MAXRES 300000
+
+ioformat extended
+
+! Define system name (use small caps)
+set system sys8_4.8usev48ns100frames 
+
+! Read parameter files
+stream toppar_drude.str
+stream step2_drude.str
+
+! Read psf and crd files
+read psf card name step3_charmm2omm.psf
+read coor card name step3_charmm2omm.crd
+coor copy comp
+
+
+!open read unit 11 card name crystal_image.str
+!CRYSTAL DEFINE @XTLtype @A @B @C @alpha @beta @gamma
+!CRYSTAL READ UNIT 11 CARD
+!image byres xcen 0.0 ycen 0.0 zcen 0.0 sele resn SWM4 end
+ 
+bomlev -2
+
+open read unit 51 unform name sys8all_4.8us_ev500ps.dcd NOCHeck 
+
+! Check on the stats.
+traj query unit 51
+set trjmax ?NFILE 
+
+
+!traj iread 51 nread 1
+traj FIRSt 51 NUNITs 1 NOCHeck skip 96
+set skip 96
+set atframe @skip
+
+! Open the output file
+open write card unit 10 name dipole_eachswm4all_@system.txt
+write title unit 10
+* Frame Resi Segi Charge XDIP YDIP ZDIP RDIP
+
+label traj_loop
+    traj read
+	   !coor dipo sele .byres. (resn swm4 .and. ((type O1P .or. type O2P) .around. 3.5 )) end
+	   define wat sele .byres. (resn swm4) end
+           define oxy sele wat .and. type OH2 end
+           set n ?NSEL
+	   set i 1
+label resi_loop
+	define dip_wat sele .byres. (oxy .subset. @i) end
+	coor dipo sele dip_wat end
+	set resi ?SELRESI
+	set segi ?SELSEGI
+write title unit 10
+           * @atframe @resi @segi ?CHARGE ?XDIP ?YDIP ?ZDIP ?RDIP
+incr i
+if @i .le. @n goto resi_loop 
+
+       incr atframe by @skip 
+    if @atframe .lt. @trjmax goto traj_loop
+
+stop
+

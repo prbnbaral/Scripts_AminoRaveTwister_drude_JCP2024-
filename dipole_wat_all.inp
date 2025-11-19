@@ -1,0 +1,119 @@
+* Calculate dipole moment of selected atoms
+*
+ 
+DIMENS CHSIZE 300000 MAXRES 300000
+
+ioformat extended
+
+! Define system name (use small caps)
+set system sys8_4.8usev48ns100frames 
+
+! Read parameter files
+stream toppar_drude.str
+stream step2_drude.str
+
+! Read psf and crd files
+read psf card name step3_charmm2omm.psf
+read coor card name step3_charmm2omm.crd
+coor copy comp
+
+
+!open read unit 11 card name crystal_image.str
+!CRYSTAL DEFINE @XTLtype @A @B @C @alpha @beta @gamma
+!CRYSTAL READ UNIT 11 CARD
+!image byres xcen 0.0 ycen 0.0 zcen 0.0 sele resn SWM4 end
+ 
+
+!--> atom selection for dipole moment of a nucleobase (A/T/U/G/C)
+!define not_base sele (type P 	.or. type DP	.or. type O1P	.or. type DO1P	-
+!	        .or. type O2P	.or. type DO2P	.or. type O5'	.or. type DO5'	-
+!		.or. type C5'	.or. type DC5'	.or. type H5'	.or. type H5''	-
+!		.or. type C4'	.or. type DC4'	.or. type H4'	.or. type O4'	-
+!		.or. type DO4'	.or. type LPRA	.or. type LPRB	.or. type LPX	-
+!		.or. type C1'	.or. type DC1'	.or. type H1'	.or. type C2'	-
+!		.or. type DC2'	.or. type H2''	.or. type O2'	.or. type DO2'	-
+!		.or. type H2'	.or. type LPHA	.or. type LPHB	.or. type C3'	-
+!		.or. type DC3'	.or. type H3'	.or. type O3'	.or. type DO3'  -
+!               .or. type H5T   .or. type H3T   .or. type LP3A  .or. type LP3B  -
+!               .or. type LP5B  .or. type LP5A  .or. type LPA   .or. type LPB   -
+!               .or. type DO5T  .or. type O5T ) end
+
+!coor dipo sele segid DNAA .and. .not. not_base show end
+!stream /raid/prabin/stream_files/base_def.str
+!stream base_def.str
+
+!define base_all sele base_ade .or. base_gua .or. base_cyt .or. base_thy show end
+
+define base sele (type N9  .or.  type DN9  .or.  type C4  .or.  type DC4  .or. - 
+                  type N3  .or.  type DN3  .or.  type LP3 .or.  type C2   .or. -
+                  type DC2 .or.  type H2   .or.  type N1  .or.  type DN1  .or. -
+                  type LP1 .or.  type C6   .or.  type DC6 .or.  type N6   .or. -
+                  type DN6 .or.  type H61  .or.  type H62 .or.  type C5   .or. -
+                  type DC5 .or.  type N7   .or.  type DN7 .or.  type LP7  .or. -
+                  type C8  .or.  type DC8  .or.  type H8  .or.  type H1   .or. -
+                  type H6  .or.  type N2   .or.  type DN2 .or.  type H21  .or. -
+                  type H22 .or.  type C6   .or.  type DC6 .or.  type O6   .or. -
+                  type DO6 .or.  type LP6A .or.  type LP6B .or. type O2   .or. -
+                  type DO2 .or. type LP2A  .or.  type LP2B .or. type N3   .or. -
+                  type DN3 .or.  type H3   .or.  type LP3 .or.  type C4   .or. -
+                  type DC4 .or.  type O4   .or.  type DO4 .or.  type LP4A .or. -
+                  type LP4B .or.  type N4  .or.  type DN4 .or.  type H41  .or. -
+                  type H42  .or. type C5M  .or.  type DC5M  .or. type H51 .or. -
+                  type H52  .or. type H53  .or. type H5) end
+
+define base_atoms sele (type N9  .or.   type C4  .or.  - 
+                  type N3  .or.     type C2   .or. -
+                   type H2   .or.  type N1  .or.  -
+                   type C6   .or.   type N6   .or. -
+                   type H61  .or.  type H62 .or.  type C5   .or. -
+                   type N7   .or.   -
+                  type C8  .or.   type H8  .or.  type H1   .or. -
+                  type H6  .or.  type N2   .or.   type H21  .or. -
+                  type H22 .or.  type C6   .or.   type O6   .or. -
+                    type O2   .or. -
+                   type N3   .or. -
+                   type H3   .or.   type C4   .or. -
+                   type O4   .or.   -
+                   type N4  .or.   type H41  .or. -
+                  type H42  .or. type C5M  .or.  type H51 .or. -
+                  type H52  .or. type H53  .or. type H5) end
+
+define pur sele (type n1 .or. type c8 ) end
+define pyr sele (type n1 .or. type c4 ) end
+
+define sugar sele (type c1' .or. type c2' .or. type c3' .or. type c4' .or. type o4') end
+define mag sele (type MG .or. type DMG) end
+
+!coor dipo sele segid DNAA .and. base show end
+!stop
+
+bomlev -2
+
+open read unit 51 unform name sys8all_4.8us_ev500ps.dcd NOCHeck 
+
+! Check on the stats.
+traj query unit 51
+set trjmax ?NFILE 
+
+
+!traj iread 51 nread 1
+traj FIRSt 51 NUNITs 1 NOCHeck skip 96
+set skip 96
+set atframe @skip
+
+! Open the output file
+open write card unit 10 name dipole_swm4all_@system.txt
+write title unit 10
+* Frame Charge XDIP YDIP ZDIP RDIP
+
+label traj_loop
+    traj read
+	   coor dipo sele .byres. (resn swm4) show end
+
+write title unit 10
+           * @atframe ?CHARGE ?XDIP ?YDIP ?ZDIP ?RDIP
+       incr atframe by @skip 
+    if @atframe .lt. @trjmax goto traj_loop
+
+stop
+

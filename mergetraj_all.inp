@@ -1,0 +1,97 @@
+*
+! Read topology and parameter files
+stream toppar_drude.str
+
+! Read PSF
+open read unit 10 card name step3_charmm2omm.psf
+read psf unit 10 card
+
+! Read COOR
+open read unit 10 card name step3_charmm2omm.crd
+read coor unit 10 pdb resid
+
+stream step2_drude.str
+stream checkfft.str
+
+open read unit 40 file name output_1.dcd
+open read unit 41 file name output_2.dcd
+open read unit 42 file name output_3.dcd
+open read unit 43 file name output_4.dcd
+open read unit 44 file name output_5.dcd
+open read unit 45 file name output_6.dcd
+open read unit 46 file name output_7.dcd
+open read unit 47 file name output_8.dcd
+open read unit 48 file name output_9.dcd
+open read unit 49 file name output_10.dcd
+open read unit 50 file name output_11.dcd
+open read unit 51 file name output_12.dcd
+open read unit 52 file name output_13.dcd
+open read unit 53 file name output_14.dcd
+open read unit 54 file name output_15.dcd
+open read unit 55 file name output_16.dcd
+open read unit 56 file name output_17.dcd
+open read unit 57 file name output_18.dcd
+open read unit 58 file name output_19.dcd
+open read unit 59 file name output_20.dcd
+open read unit 60 file name output_21.dcd
+open read unit 61 file name output_22.dcd
+open read unit 62 file name output_23.dcd
+open read unit 63 file name output_24.dcd
+open read unit 64 file name output_25.dcd
+open read unit 65 file name output_26.dcd
+open read unit 66 file name output_27.dcd
+open read unit 67 file name output_28.dcd
+!open read unit 68 file name output_29.dcd
+!open read unit 69 file name output_30.dcd
+
+open read unit 10 card name crystal_image.str
+
+CRYSTAL DEFINE @XTLtype @A @B @C @alpha @beta @gamma
+CRYSTAL READ UNIT 10 CARD
+image byres xcen 0.0 ycen 0.0 zcen 0.0 sele resn SWM4 .or. segid HETA:HETC end
+
+! Check on the stats.
+traj query unit 40
+traj query unit 41
+traj query unit 42
+traj query unit 43
+traj query unit 44
+traj query unit 45
+traj query unit 46
+traj query unit 47
+traj query unit 48
+traj query unit 49
+traj query unit 50
+traj query unit 51
+traj query unit 52
+traj query unit 53
+traj query unit 54
+traj query unit 55
+traj query unit 56
+traj query unit 57
+traj query unit 58
+traj query unit 59
+traj query unit 60
+traj query unit 61
+traj query unit 62
+traj query unit 63
+traj query unit 64
+traj query unit 65
+traj query unit 66
+traj query unit 67
+!traj query unit 68
+!traj query unit 69
+!traj query unit 70
+
+!Write output coordinate
+open write unit 90 file name sys2all_5.6us_ev2ns.dcd
+
+! New, merged trajectory
+MERGe COOR FIRSTu 40 NUNItu 28 SKIP 2000000 OUTPutu 90 NOCHeck recenter sele all end -
+ORIEnt sele segid RNAA end ! probably don't need the begin with NOCHeck, but I left it there
+
+!MERGe COOR FIRSTu 40 NUNItu 2 SKIP 125000 OUTPutu 60 BEGIN 205000 STOP 40200000 sele all end ORIEnt sele segid RNAA end
+!merge first 40 nunit 2 output 60 begin 0 !stop 7999
+!merge first 40 nunit 2 output 60 begin 0 stop 7999 skip 500
+
+stop
