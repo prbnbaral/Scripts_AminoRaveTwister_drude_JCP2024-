@@ -4,8 +4,6 @@ Analysis scripts and code for the manuscript: [https://doi.org/10.1063/5.0241246
 
 ## Authors 
 - Prabin Baral 
-- Mert Y. Sengul 
-- Alexander D. MacKerell Jr.
 
 ## Description
 
