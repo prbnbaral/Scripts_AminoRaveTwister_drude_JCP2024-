@@ -1,7 +1,12 @@
 # Twister Ribozyme Analysis Scripts
 
 Analysis scripts and code for the manuscript: [https://doi.org/10.1063/5.0241246](https://doi.org/10.1063/5.0241246)
-Authors: Prabin Baral, Mert Y. Sengul, Alexander D. MacKerell Jr.
+
+## Authors 
+* Prabin Baral 
+* Mert Y. Sengul 
+* Alexander D. MacKerell Jr.
+
 ## Description
 
 This repository contains the computational analysis tools used to study the twister ribozyme system. The scripts primarily focus on trajectory analysis, water molecule tracking, ion counting, dipole moment calculations, and data visualization from molecular dynamics simulations.
