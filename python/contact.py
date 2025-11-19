@@ -1,17 +1,13 @@
-#Import the necessary libraries
 import numpy as np 
 import matplotlib.pyplot as plt 
 import scipy.stats as st
 
-#Read the data from file
 data = np.genfromtxt("T1T2T4_S1_1.8us_ev500ps.dat", delimiter="")
  
-#Extract the columns from the data
 T1 = data[:,0]
 T2 = data[:,1]
 T4 = data[:,2] 
 
-#Create subplots
 fig, axs = plt.subplots(nrows = 3, ncols = 1, figsize=(3,6))
 fig.subplots_adjust(hspace=0.3)
 
@@ -30,7 +26,6 @@ axs[1].set_ylabel("T2", fontsize=fsize)
 axs[2].set_xlabel("T4", fontsize=fsize)
 axs[2].set_ylabel("T1", fontsize=fsize)
 
-#Plot and set the colorbar
 plt1 = fig.colorbar(axs[0].hist2d(T2,T1,bins=[50,50], cmap='YlGnBu', density=True, weights=np.ones_like(T2)/2)[3], ax=axs[0])
 plt1.ax.tick_params(labelsize=6)
 

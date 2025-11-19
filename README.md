@@ -3,9 +3,9 @@
 Analysis scripts and code for the manuscript: [https://doi.org/10.1063/5.0241246](https://doi.org/10.1063/5.0241246)
 
 ## Authors 
-* Prabin Baral 
-* Mert Y. Sengul 
-* Alexander D. MacKerell Jr.
+- Prabin Baral 
+- Mert Y. Sengul 
+- Alexander D. MacKerell Jr.
 
 ## Description
 
@@ -20,8 +20,8 @@ This repository contains the computational analysis tools used to study the twis
 
 
 ### Supporting Files
-- `residue-list.txt` - List of residues for analysis
-- `run_count.s` - Batch submission script
+- `residue-list.txt` - series of nucleotides in the system
+- `run_count.sh` - Batch submission script
 
 ## Requirements
 
@@ -49,7 +49,7 @@ pip install numpy matplotlib pandas seaborn
 vmd -dispdev text -e script_name.tcl
 ```
 
-### Running CP2K Calculations
+### Running CHARMM Calculations
 ```bash
 charmm -i input_file.inp -o output_file.out
 ```
